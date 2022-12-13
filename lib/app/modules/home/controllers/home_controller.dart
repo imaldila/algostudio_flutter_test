@@ -7,8 +7,8 @@ class HomeController extends GetxController {
   final MemeRepositry _memeRepositry = MemeService();
   RxBool isFetching = false.obs;
 
-  final _meme = MemeData().obs;
-  MemeData get meme => _meme.value;
+  final _meme = <MemeElement>[].obs;
+  List<MemeElement> get meme => _meme;
 
   @override
   void onInit() {
@@ -23,7 +23,21 @@ class HomeController extends GetxController {
     try {
       isFetching.value = true;
       var dataMeme = await _memeRepositry.getMeme();
-      _meme.value = dataMeme.data!;
+      _meme.addAll(dataMeme.data!.memes!);
+      isFetching.value = false;
+      update();
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
+  Future onRefresh() async {
+    try {
+      isFetching.value = true;
+      await Future.delayed(const Duration(seconds: 2));
+      _meme.clear();
+      getMemes();
+      _meme.refresh();
       isFetching.value = false;
       update();
     } catch (e) {
