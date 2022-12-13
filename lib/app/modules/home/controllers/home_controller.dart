@@ -1,20 +1,33 @@
+import 'package:algostudio_flutter_test/app/data/models/meme.dart';
+import 'package:algostudio_flutter_test/app/data/services/meme_repository.dart';
+import 'package:algostudio_flutter_test/app/data/services/meme_service.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  final MemeRepositry _memeRepositry = MemeService();
+  RxBool isFetching = false.obs;
 
-  final count = 0.obs;
+  final _meme = MemeData().obs;
+  MemeData get meme => _meme.value;
+
   @override
   void onInit() {
+    getMemes();
     super.onInit();
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {}
-  void increment() => count.value++;
+
+  Future<void> getMemes() async {
+    try {
+      isFetching.value = true;
+      var dataMeme = await _memeRepositry.getMeme();
+      _meme.value = dataMeme.data!;
+      isFetching.value = false;
+      update();
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
 }
