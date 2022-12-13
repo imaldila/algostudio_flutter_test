@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -42,15 +43,18 @@ class HomeView extends GetView<HomeController> {
                 itemCount: _.meme.length,
                 itemBuilder: (context, index) {
                   var memes = _.meme[index];
-                  return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      color: Colors.blueAccent,
-                      child: CacheImage(
-                        imageUrl: memes.url ?? '-',
-                      ));
+                  return InkWell(
+                    onTap: () => Get.toNamed(Routes.detailMeme, arguments: memes),
+                    child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        color: Colors.blueAccent,
+                        child: CacheImage(
+                          imageUrl: memes.url ?? '-',
+                        )),
+                  );
                 },
               );
             } else {
