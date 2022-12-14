@@ -36,44 +36,60 @@ class DetailMemeView extends GetView<DetailMemeController> {
               child: Image.network(memes.url!),
             ),
 
-            // ...List.generate(
-            //   controller.textList.length,
-            //   (index) => GetBuilder<DetailMemeController>(
-            //     builder: (_) =>
-            //   ),
-            // ),
-            DragTarget<String>(
-              onAccept: (data) => controller.textList[0] = data,
-              builder: (context, __, ___) => SizedBox(
-                // color: Colors.blue,
-                height: Get.height,
-                width: Get.width,
-                child: const Text(
-                  '',
+            ...List.generate(
+              controller.textList.length,
+              (index) => DragTarget<String>(
+                onAccept: (data) => controller.textList[index] = data,
+                builder: (context, __, ___) => SizedBox(
+                  // color: Colors.blue,
+                  height: Get.height,
+                  width: Get.width,
+                  child: Text(
+                    __.isNotEmpty ? controller.textList[index] : '',
+                  ),
                 ),
               ),
             ),
             ...List.generate(
               controller.textList.length,
-              (index) => Obx(
-                () => Draggable(
-                  data: controller.textList[index],
-                  feedback: Container(
-                    padding: const EdgeInsets.all(4),
+              (i) => Obx(
+                () => Positioned(
+                  top: controller.top.value,
+                  left: controller.left.value,
+                  child: GestureDetector(
+                    onPanUpdate: (details) => controller.dragText(details),
                     child: Text(
-                      controller.textList[index],
-                    ),
-                  ),
-                  childWhenDragging: Container(),
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      controller.textList[index],
+                      controller.textList[i],
                     ),
                   ),
                 ),
               ),
             ),
+            // ...List.generate(
+            //   controller.textList.length,
+            //   (index) => Obx(
+            //     () => Positioned(
+            //       bottom: 100,
+            //       left: 26,
+            //       child: Draggable(
+            //         data: controller.textList[index],
+            //         feedback: Container(
+            //           padding: const EdgeInsets.all(4),
+            //           child: Text(
+            //             controller.textList[index],
+            //           ),
+            //         ),
+            //         onDraggableCanceled: (velocity, offset) {},
+            //         child: Container(
+            //           padding: const EdgeInsets.all(4),
+            //           child: Text(
+            //             controller.textList[index],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Positioned(
               bottom: 22,
               left: 22,
